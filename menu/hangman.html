@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Big Hangman Game</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: #111;
+        color: #fff;
+    }
+
+    h1 {
+        margin-top: 20px;
+    }
+
+    .screen { display: none; margin-top: 20px; }
+    .active { display: block; }
+
+    input {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    button {
+        padding: 10px 15px;
+        font-size: 16px;
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    #wordDisplay {
+        font-size: 32px;
+        letter-spacing: 12px;
+        margin: 20px;
+    }
+
+    #letters button {
+        width: 42px;
+        height: 42px;
+        margin: 3px;
+        font-weight: bold;
+    }
+
+    canvas {
+        background: #1b1b1b;
+        margin-top: 20px;
+        border: 3px solid #fff;
+    }
+
+    .win { color: lime; font-size: 24px; }
+    .lose { color: red; font-size: 24px; }
+</style>
+</head>
+<body>
+
+<h1>🔥  Hangman  🔥</h1>
+
+<div id="setup" class="screen active">
+    <p>Enter a secret word:</p>
+    <input type="password" id="secretWord" />
+    <br>
+    <button onclick="startGame()">Start</button>
+</div>
+
+<div id="game" class="screen">
+    <div id="wordDisplay"></div>
+    <div id="letters"></div>
+    <p id="status"></p>
+
+    <canvas id="hangman" width="400" height="500"></canvas>
+
+    <br>
+    <button onclick="location.reload()">Restart</button>
+</div>
+
+<script>
+let word = "";
+let guessed = [];
+let wrong = 0;
+
+const canvas = document.getElementById("hangman");
+const ctx = canvas.getContext("2d");
+
+function startGame() {
+    word = document.getElementById("secretWord").value.toLowerCase();
+    if (!word) return;
+
+    document.getElementById("setup").classList.remove("active");
+    document.getElementById("game").classList.add("active");
+
+    guessed = [];
+    wrong = 0;
+
+    createLetters();
+    updateDisplay();
+    draw();
+}
+
+function createLetters() {
+    const lettersDiv = document.getElementById("letters");
+    lettersDiv.innerHTML = "";
+
+    for (let i = 97; i <= 122; i++) {
+        let btn = document.createElement("button");
+        btn.innerText = String.fromCharCode(i);
+        btn.onclick = () => guess(btn.innerText, btn);
+        lettersDiv.appendChild(btn);
+    }
+}
+
+function guess(letter, btn) {
+    btn.disabled = true;
+
+    if (word.includes(letter)) {
+        guessed.push(letter);
+    } else {
+        wrong++;
+        draw();
+    }
+
+    updateDisplay();
+    check();
+}
+
+function updateDisplay() {
+    let display = "";
+    for (let c of word) {
+        display += guessed.includes(c) ? c + " " : "_ ";
+    }
+    document.getElementById("wordDisplay").innerText = display;
+}
+
+function check() {
+    let win = word.split("").every(c => guessed.includes(c));
+
+    if (win) {
+        document.getElementById("status").innerHTML = "🎉 YOU WIN!";
+        document.getElementById("status").className = "win";
+        disableAll();
+    }
+
+    if (wrong >= 6) {
+        document.getElementById("status").innerHTML = "💀 YOU LOST! Word: " + word;
+        document.getElementById("status").className = "lose";
+        disableAll();
+    }
+}
+
+function disableAll() {
+    document.querySelectorAll("#letters button").forEach(b => b.disabled = true);
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 5;
+
+    // Gallow (BIG)
+    ctx.beginPath();
+    ctx.moveTo(80, 450);
+    ctx.lineTo(320, 450); // base
+    ctx.moveTo(120, 450);
+    ctx.lineTo(120, 80);  // pole
+    ctx.lineTo(260, 80);  // top beam
+    ctx.lineTo(260, 120); // rope
+    ctx.stroke();
+
+    // HEAD (bigger)
+    if (wrong > 0) {
+        ctx.beginPath();
+        ctx.arc(260, 160, 40, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    // BODY
+    if (wrong > 1) {
+        ctx.beginPath();
+        ctx.moveTo(260, 200);
+        ctx.lineTo(260, 320);
+        ctx.stroke();
+    }
+
+    // LEFT ARM
+    if (wrong > 2) {
+        ctx.beginPath();
+        ctx.moveTo(260, 240);
+        ctx.lineTo(210, 280);
+        ctx.stroke();
+    }
+
+    // RIGHT ARM
+    if (wrong > 3) {
+        ctx.beginPath();
+        ctx.moveTo(260, 240);
+        ctx.lineTo(310, 280);
+        ctx.stroke();
+    }
+
+    // LEFT LEG
+    if (wrong > 4) {
+        ctx.beginPath();
+        ctx.moveTo(260, 320);
+        ctx.lineTo(220, 400);
+        ctx.stroke();
+    }
+
+    // RIGHT LEG
+    if (wrong > 5) {
+        ctx.beginPath();
+        ctx.moveTo(260, 320);
+        ctx.lineTo(300, 400);
+        ctx.stroke();
+    }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Guess the Leader - Yes/No Life Facts</title>
+<style>
+    body {
+        font-family: Arial;
+        background: #0b1020;
+        color: white;
+        text-align: center;
+        padding: 20px;
+    }
+
+    select, input, button {
+        padding: 10px;
+        margin: 8px;
+        border-radius: 8px;
+        border: none;
+    }
+
+    button {
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .clue {
+        display: block;
+        width: 70%;
+        margin: 10px auto;
+        padding: 12px;
+        background: #1f2937;
+        border-radius: 8px;
+        font-size: 15px;
+    }
+
+    .true { background: #16a34a !important; }
+    .false { background: #dc2626 !important; }
+
+    .box {
+        margin-top: 20px;
+        background: #111827;
+        padding: 15px;
+        border-radius: 10px;
+        display: inline-block;
+    }
+</style>
+</head>
+<body>
+
+<h1>🌍 Guess the Leader (Life Fact Edition)</h1>
+
+<select id="country">
+    <option value="">-- Choose Country --</option>
+    <option>USA</option>
+    <option>France</option>
+    <option>UK</option>
+    <option>Germany</option>
+    <option>India</option>
+    <option>Brazil</option>
+    <option>Japan</option>
+    <option>Canada</option>
+</select>
+
+<button onclick="start()">Start Game</button>
+
+<div id="game" style="display:none;">
+    <h2 id="title"></h2>
+    <div id="clues"></div>
+
+    <div class="box">
+        <input id="guess" placeholder="Guess the leader">
+        <button onclick="check()">Submit</button>
+    </div>
+
+    <p id="result"></p>
+</div>
+
+<script>
+
+const data = {
+    USA: {
+        leader: "Joe Biden",
+        clues: [
+            ["☠️ Died in office", false],
+            ["🧓 Over 60 when became president", true],
+            ["🏛️ Was Vice President before", true],
+            ["🗳️ Won more than one presidential election", false],
+            ["🚫 Never held public office before presidency", false],
+            ["🌍 Still alive today", true],
+            ["🏛️ Served in Senate for decades", true],
+            ["⚖️ Was ever impeached", false],
+            ["🧠 First political job was senator", true],
+            ["👑 Was monarch of USA", false]
+        ]
+    },
+
+    France: {
+        leader: "Emmanuel Macron",
+        clues: [
+            ["🌍 Still alive today", true],
+            ["🧓 Over 60 when elected", false],
+            ["🏛️ Former investment banker", true],
+            ["🗳️ Won more than one presidential election", true],
+            ["☠️ Died in office", false],
+            ["🚫 Never held any job before politics", false],
+            ["📉 First elected in 2017", true],
+            ["🏛️ Created new political movement", true],
+            ["👴 Led France during WWII", false],
+            ["⚖️ Was impeached", false]
+        ]
+    },
+
+    UK: {
+        leader: "Rishi Sunak",
+        clues: [
+            ["🌍 Still alive today", true],
+            ["🇬🇧 First British Asian Prime Minister", true],
+            ["☠️ Died in office", false],
+            ["🏛️ Was Chancellor of the Exchequer", true],
+            ["🧓 Over 70 when became PM", false],
+            ["💰 Worked in finance before politics", true],
+            ["🗳️ Won multiple general elections as PM", false],
+            ["🚫 Never held government job before PM", false],
+            ["👑 Monarch of UK", false],
+            ["📉 Took office during economic crisis", true]
+        ]
+    },
+
+    Germany: {
+        leader: "Olaf Scholz",
+        clues: [
+            ["🌍 Still alive today", true],
+            ["☠️ Died in office", false],
+            ["🏛️ Was Vice Chancellor", true],
+            ["💼 Former Finance Minister", true],
+            ["🧓 Over 80 when elected", false],
+            ["🗳️ Elected Chancellor in 2021", true],
+            ["🚫 Never held political office before 2020", false],
+            ["⚖️ Was impeached", false],
+            ["🏛️ Member of SPD party", true],
+            ["👑 Monarch", false]
+        ]
+    },
+
+    India: {
+        leader: "Narendra Modi",
+        clues: [
+            ["🌍 Still alive today", true],
+            ["🏛️ Former Chief Minister of Gujarat", true],
+            ["🗳️ Won multiple national elections", true],
+            ["☠️ Died in office", false],
+            ["🚫 Never won an election", false],
+            ["🧓 Over 70 when became PM", true],
+            ["📊 Introduced GST tax system", true],
+            ["🏛️ Political outsider", false],
+            ["⚖️ Was arrested for corruption", false],
+            ["🔥 Leader of BJP", true]
+        ]
+    },
+
+    Brazil: {
+        leader: "Luiz Inácio Lula da Silva",
+        clues: [
+            ["🌍 Still alive today", true],
+            ["👷 Former factory worker", true],
+            ["🗳️ Returned to office after gap", true],
+            ["☠️ Died in office", false],
+            ["🚫 Never held public office", false],
+            ["🏛️ Founded Workers’ Party", true],
+            ["🧓 Over 80 when elected", false],
+            ["⚖️ Was imprisoned at some point", true],
+            ["👑 Military dictator", false],
+            ["📊 Focus on poverty reduction", true]
+        ]
+    }
+};
+
+let current;
+
+function start() {
+    const c = document.getElementById("country").value;
+    if (!c) return alert("Pick a country");
+
+    current = data[c];
+
+    document.getElementById("game").style.display = "block";
+    document.getElementById("title").innerText = "Country: " + c;
+
+    const box = document.getElementById("clues");
+    box.innerHTML = "";
+
+    current.clues.forEach(([text, ans]) => {
+        const b = document.createElement("button");
+        b.className = "clue";
+        b.innerText = text;
+
+        b.onclick = () => {
+            if (ans) {
+                b.classList.add("true");
+                b.innerText += " ✔ YES";
+            } else {
+                b.classList.add("false");
+                b.innerText += " ✖ NO";
+            }
+            b.disabled = true;
+        };
+
+        box.appendChild(b);
+    });
+
+    document.getElementById("result").innerText = "";
+}
+
+function check() {
+    const g = document.getElementById("guess").value.trim();
+    const r = document.getElementById("result");
+
+    if (g.toLowerCase() === current.leader.toLowerCase()) {
+        r.innerText = "🎉 Correct! It's " + current.leader;
+        r.style.color = "lightgreen";
+    } else {
+        r.innerText = "❌ Wrong! Try again.";
+        r.style.color = "red";
+    }
+}
+</script>
+
+</body>
+</html>

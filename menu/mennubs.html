@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bob's Games</title>
+
+<style>
+body {
+    margin: 0;
+    background: white;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.menu {
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    margin-top: 40px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* FIXED LINK BUTTON STYLE */
+.game-button {
+    width: 250px;
+    height: 120px;
+    display: block;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+}
+
+/* IMAGE */
+.game-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* TEXT */
+.game-button span {
+    position: relative;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 0 0 5px black;
+    z-index: 2;
+}
+
+/* DARK OVERLAY */
+.game-button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.35);
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Bob's Games</h1>
+
+<div class="menu">
+
+    <div class="column">
+
+        <a class="game-button" href="earth2.html">
+            <img src="https://thfvnext.bing.com/th/id/OIP.oCekuazOEg_tuxObbDH9VwHaFA?w=260&h=180&c=7&r=0&o=7&cb=thfvnextfalcon&dpr=1.3&pid=1.7&rm=3">
+            <span>Territory wars!!</span>
+        </a>
+
+        <a class="game-button" href="earth.html">
+            <img src="https://thfvnext.bing.com/th/id/OIP.7psOipzjmMOcPM8dwMLh9gHaNK?w=115&h=180&c=7&r=0&o=7&cb=thfvnextfalcon&dpr=1.3&pid=1.7&rm=3">
+            <span>Random earth game</span>
+        </a>
+
+        <a class="game-button" href="emojis.html">
+            <img src="https://thfvnext.bing.com/th/id/OIP.ljE4PG6q_A_aga_IvzvH2QHaFj?w=258&h=194&c=7&r=0&o=7&cb=thfvnextfalcon&dpr=1.3&pid=1.7&rm=3">
+            <span>Make random emojis</span>
+        </a>
+
+        <a class="game-button" href="hangman.html">
+            <img src="data:image/webp;base64,PASTE_YOUR_BASE64_HERE">
+            <span>Hangman</span>
+        </a>
+
+        <a class="game-button" href="rv.html">
+            <img src="data:image/webp;base64,PASTE_YOUR_BASE64_HERE">
+            <span>Old Tv</span>
+        </a>
+
+    </div>
+
+    <div class="column">
+
+        <a class="game-button" href="trump.html">
+            <img src="https://thfvnext.bing.com/th/id/OIP.bJRJVJyxNENnXlZ0Br3TFwHaEK?w=296&h=180&c=7&r=0&o=7&cb=thfvnextfalcon&dpr=1.3&pid=1.7&rm=3">
+            <span>Guess the president</span>
+        </a>
+
+        <a class="game-button" href="name.html">
+            <img src="https://thfvnext.bing.com/th/id/OIP.BvYCcLY8EKczZ3mjkJzokwHaHa?w=174&h=180&c=7&r=0&o=7&cb=thfvnextfalcon&dpr=1.3&pid=1.7&rm=3">
+            <span>Find places with your name!!</span>
+        </a>
+
+        <a class="game-button" href="flag.html">
+            <img src="data:image/webp;base64,PASTE_YOUR_BASE64_HERE">
+            <span>Guess the flag</span>
+        </a>
